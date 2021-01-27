@@ -16,12 +16,8 @@ The repository contains the following generic registers:
 * Direction-controlled Serial-In Serial- /Parallel-Out register (SI_SPO_rl_shift_reg_generic)
 * First-In First-Out register (FIFO_generic)
 Other generic components
-* A dual read RAM(RAM_dual_R)
-* Latch (latch)
-* Row of latches (latch_row)
-* A latch with behavior of SRAM cell (SRAM_cell_row)
-* A latch array with behavior of SRAM array (SRAM_latch_array)
-* A latch cell with behavior of SRAM cell array (SRAM_cell_array)
+* A dual read RAM (RAM_dual_R)
+* A single read RAM (RAM_dual_R)
 Other non-generic
 * A package with useful and necessary functions for the above components (amshal_misc_pkg)
 * A 32x5 OR-Gate encoder (OR_ARRAY_32x5_Enc)
