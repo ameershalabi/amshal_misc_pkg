@@ -71,7 +71,7 @@ package amshal_misc_pkg is
 	function std_logic_2_int( arg              : std_logic) return integer;
 	function TF_2_10( arg                      : boolean) return std_logic;
 	function b10_2_TF( arg                     : std_logic) return boolean;
-	function char_2_INT( arg                     : character) return integer;
+	function char_2_INT( arg                   : character) return integer;
 	impure function rand_gen_vec( vector_width : integer) return std_logic_vector;
 	-- array for generic MUX
 
@@ -153,9 +153,7 @@ package amshal_misc_pkg is
 			en_o : out std_logic_vector(en_width-1 downto 0)
 		);
 	end component en_and;
-	--------------------------------------------------------------------------------
-	-- REGISTER 
-	--------------------------------------------------------------------------------
+
 
 	component LFSR_RAND is
 		generic(addr_len : natural := 12); -- length of pseudo-random sequence
@@ -280,9 +278,7 @@ package amshal_misc_pkg is
 		);
 	end component SI_SPO_rl_shift_reg_generic;
 
-	--------------------------------------------------------------------------------
-	-- REGISTER -- END
-	--------------------------------------------------------------------------------
+
 
 	component FIFO_generic is
 		generic (
@@ -326,83 +322,62 @@ package amshal_misc_pkg is
 			r_data_2 : out std_logic_vector(ram_width-1 downto 0)
 		);
 	end component RAM_dual_R;
-	--------------------------------------------------------------------------------
-	-- latches
-	--------------------------------------------------------------------------------
-	component latch is
-		port (
-			en : in  std_logic;
-			w  : in  std_logic;
-			d  : in  std_logic;
-			q  : out std_logic
-		);
-	end component latch;
 
-	component SRAM_cell is
-		port (
-			w_l  : in    std_logic;
-			b_l  : inout std_ulogic;
-			nb_l : inout std_ulogic
-		);
-	end component SRAM_cell;
-
-	component latch_row is
+	component RAM_single_R is
 		generic (
-			row_width : natural := 4
+			ram_width : natural := 4;
+			ram_depth : natural := 8
 		);
 		port (
-			en        : in  std_logic;
-			w         : in  std_logic;
-			row_d_in  : in  std_logic_vector(row_width-1 downto 0);
-			row_d_out : out std_logic_vector(row_width-1 downto 0)
+			clk : in std_logic;
+			rst : in std_logic;
+			-- write port
+			w_en   : in std_logic;
+			w_addr : in std_logic_vector(log2ceil(ram_depth)-1 downto 0);
+			w_data : in std_logic_vector(ram_width-1 downto 0);
+			-- read ports
+			r_addr : in  std_logic_vector(log2ceil(ram_depth)-1 downto 0);
+			r_data : out std_logic_vector(ram_width-1 downto 0)
 		);
-	end component latch_row;
+	end component RAM_single_R;
 
-	component SRAM_cell_row is
+	component FSM_eg is
+		port (
+			clk : in std_logic;
+			rst : in std_logic;
+			in0 : in std_logic;
+			inN : in std_logic;
+			-- in1, in2, etc ... -- other inputs
+			out0 : out std_logic;
+			outN : out std_logic
+		-- out1, out2, etc ... -- other outputs
+		);
+	end component FSM_eg;
+
+	component fa is
+		port (
+			in_a : in std_logic;
+			in_b : in std_logic;
+			c_in : in std_logic;
+
+			sum   : out std_logic;
+			c_out : out std_logic
+		);
+	end component fa;
+	
+	component parallel_fa_generic is
 		generic (
-			row_width : natural := 4
+			adder_len : natural := 8
 		);
 		port (
-			en        : in  std_logic;
-			w         : in  std_logic;
-			r         : in  std_logic;
-			row_d_in  : in  std_logic_vector(row_width-1 downto 0);
-			row_d_out : out std_logic_vector(row_width-1 downto 0)
-		);
-	end component SRAM_cell_row;
+			in_a : in std_logic_vector(adder_len-1 downto 0);
+			in_b : in std_logic_vector(adder_len-1 downto 0);
+			c_in : in std_logic;
 
-	component SRAM_latch_array is
-		generic (
-			SRAM_width : natural := 8;
-			SRAM_depth : natural := 4
+			sum      : out std_logic_vector(adder_len-1 downto 0);
+			OVERFLOW : out std_logic
 		);
-		port (
-			clk       : in  std_logic;
-			addr      : in  std_logic_vector(log2ceil(SRAM_depth)-1 downto 0);
-			en        : in  std_logic;
-			write_pin : in  std_logic;
-			data_in   : in  std_logic_vector(SRAM_width-1 downto 0);
-			data_out  : out std_logic_vector(SRAM_width-1 downto 0)
-		);
-	end component SRAM_latch_array;
-
-	component SRAM_cell_array is
-		generic (
-			array_width : natural := 2;
-			array_depth : natural := 4
-		);
-		port (
-			clk       : in  std_logic                                          := 'Z';
-			addr      : in  std_logic_vector(log2ceil(array_depth)-1 downto 0) := (others => 'Z');
-			en        : in  std_logic                                          := 'Z';
-			write_pin : in  std_logic                                          := 'Z';
-			read_pin  : in  std_logic                                          := 'Z';
-			data_in   : in  std_logic_vector(array_width-1 downto 0)           := (others => 'Z');
-			b_l_out   : out std_logic_vector(array_width-1 downto 0)           := (others => 'Z');
-			nb_l_out  : out std_logic_vector(array_width-1 downto 0)           := (others => 'Z')
-
-		);
-	end component SRAM_cell_array;
+	end component parallel_fa_generic;
 	--------------------------------------------------------------------------------
 	-- Component declarations -- END
 	--------------------------------------------------------------------------------
@@ -546,8 +521,8 @@ package body amshal_misc_pkg is
 		return rand_vec;
 	end function;
 
-	function char_2_INT( arg                     : character) return integer is
-	variable int_out : integer := 0;
+	function char_2_INT( arg : character) return integer is
+		variable int_out : integer := 0;
 	begin
 		case (arg) is
 			when '1' =>
