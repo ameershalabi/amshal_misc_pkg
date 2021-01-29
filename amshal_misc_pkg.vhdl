@@ -359,12 +359,12 @@ package amshal_misc_pkg is
 			in_a : in std_logic;
 			in_b : in std_logic;
 			c_in : in std_logic;
-
+ 
 			sum   : out std_logic;
 			c_out : out std_logic
 		);
 	end component fa;
-	
+
 	component parallel_fa_generic is
 		generic (
 			adder_len : natural := 8
