@@ -359,7 +359,7 @@ package amshal_misc_pkg is
 			in_a : in std_logic;
 			in_b : in std_logic;
 			c_in : in std_logic;
- 
+
 			sum   : out std_logic;
 			c_out : out std_logic
 		);
@@ -378,6 +378,39 @@ package amshal_misc_pkg is
 			OVERFLOW : out std_logic
 		);
 	end component parallel_fa_generic;
+
+	component multiplier_4x4_lv_up is
+		port (
+			i_a : in std_logic;
+			i_b : in std_logic_vector(3 downto 0);
+
+			o_carry : out std_logic_vector(2 downto 0);
+			o_sum   : out std_logic_vector(2 downto 0);
+			o_prod  : out std_logic
+		);
+	end component multiplier_4x4_lv_up;
+
+	component multiplier_4x4_lv_mid is
+		port (
+			i_a     : in std_logic;
+			i_b     : in std_logic_vector(3 downto 0);
+			i_carry : in std_logic_vector(2 downto 0);
+			i_sum   : in std_logic_vector(2 downto 0);
+
+			o_carry : out std_logic_vector(2 downto 0);
+			o_sum   : out std_logic_vector(2 downto 0);
+			o_prod  : out std_logic
+		);
+	end component multiplier_4x4_lv_mid;
+
+	component multiplier_4x4_lv_last is
+		port (
+			i_carry : in std_logic_vector(2 downto 0);
+			i_sum   : in std_logic_vector(2 downto 0);
+
+			o_prod : out std_logic_vector(3 downto 0)
+		);
+	end component multiplier_4x4_lv_last;
 	--------------------------------------------------------------------------------
 	-- Component declarations -- END
 	--------------------------------------------------------------------------------

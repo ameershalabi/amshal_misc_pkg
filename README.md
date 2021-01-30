@@ -23,4 +23,5 @@ Other non-generic
 * A 32x5 OR-Gate encoder (OR_ARRAY_32x5_Enc)
 * A 16x4 OR-Gate encoder (OR_ARRAY_16x4_Enc)
 * A 8x3 OR-Gate encoder (OR_ARRAY_8x3_Enc)
+* A 4x4 parallel multiplier (devided into several components) (multiplier_4x4)
 
