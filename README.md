@@ -11,6 +11,8 @@ This repository is intended to be a collection of components written in the VHDL
 | An Incrementor | `incr_generic` | A generic combinational Incrementor |
 | A Decrementor | `decr_generic` | A generic combinational Decrementor |
 | An enabler| `en_and` | Attaches tri-state buffers to the input to control output |
+| An edge detecion circuit| `edgeDet_generic.vhdl` | Generates three vectors indicating signal event, rising edge, and falling edge at each bit of input vector |
+
 * The repository contains the following generic registers:
 
 | Component 	| file name 	| usage 		|
@@ -38,5 +40,4 @@ This repository is intended to be a collection of components written in the VHDL
 
 ## TO DO LIST:
 1. A generic multiplier (ongoing, 22/02/2021)
-2. A generic edge detection circuit (On the list!)
 3. A generic Logic-Gate Binary Tree generator (On the list!)
