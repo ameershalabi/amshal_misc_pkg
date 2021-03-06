@@ -6,7 +6,7 @@
 -- Author      : Ameer Shalabi <ameershalabi94@gmail.com>
 -- Company     : User Company Name
 -- Created     : Sat Mar  6 12:28:16 2021
--- Last update : Sat Mar  6 12:58:56 2021
+-- Last update : Sat Mar  6 13:22:11 2021
 -- Platform    : -
 -- Standard    : <VHDL-2008 | VHDL-2002 | VHDL-1993 | VHDL-1987>
 --------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ entity edgeDet_generic is
 		in_signal      : in  std_logic_vector(det_width-1 downto 0);
 		sig_event      : out std_logic_vector(det_width-1 downto 0);
 		rising_edge_v  : out std_logic_vector(det_width-1 downto 0);
-		falling_edge_v : out std_logic_vector(det_width-1 downto 0);
+		falling_edge_v : out std_logic_vector(det_width-1 downto 0)
 
 	);
 end edgeDet_generic;
