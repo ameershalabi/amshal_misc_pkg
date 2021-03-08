@@ -6,7 +6,7 @@
 -- Author      : Ameer Shalabi <ameershalabi94@gmail.com>
 -- Company     : -
 -- Created     : Thu Oct 14 00:00:00 2020
--- Last update : Fri Oct 30 09:29:12 2020
+-- Last update : Mon Mar  8 09:53:01 2021
 -- Platform    : -
 -- Standard    : <VHDL-2008 | VHDL-2002 | VHDL-1993 | VHDL-1987>
 --------------------------------------------------------------------------------
@@ -39,24 +39,25 @@ architecture REG_generic_f_rst_arch of REG_generic_f_rst is
 	signal rst_sig : std_logic;
 begin
 	rst_sig <= rst or f_rst;
-	reg_proc : process (clk, rst)
+	en_w   <= '1' when en_load='1' and f_rst='0' else '0';
+	reg_proc : process (clk, rst, f_rst)
 	begin
 		if (rst = '1') then
 			reg_out <= rst_value;
 		elsif (clk_edge_trigger = '0') then
 			if falling_edge(clk) then
-				if (en_load = '1') then
+				if (en_w = '1') then
 					reg_out <= reg_in;
 				end if;
 			end if;
 		elsif (clk_edge_trigger = '1') then
 			if rising_edge(clk) then
-				if (en_load = '1') then
+				if (en_w = '1') then
 					reg_out <= reg_in;
 				end if;
 			end if;
 		end if;
-		if (f_rst) = '1' then
+		if (f_rst = '1') then
 			reg_out <= rst_value;
 		end if;
 	end process reg_proc;
